@@ -21,4 +21,6 @@ http://<ipaddressofhost>/henkaku/api/$1</br>
 Replace <ipaddressofhost> with ip address of machine hosting webserver</br>
 Enable options "Enable Rule" and "Unmatched requests passthrough" </br>
 </br>
-On the target Vita browse to http://<ipaddressofhost>/henkaku</br>
+On the target Vita browse to http://&lt;ipaddressofhost&gt;/henkaku</br>
+
+See Usage.odt for detailed instructions
