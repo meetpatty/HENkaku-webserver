@@ -1,24 +1,27 @@
 # HENkaku-webserver
 
-Prereqs:</br>
-</br>
-Windows</br>
-IIS + asp.net 4.0</br>
-Fiddler 4</br>
-</br>
-Add a new IIS Application Alias: HENkaku, Application Pool: ASP.NET v4.0</br>
-Copy contents of HENkaku-webserver into Application Physical directory</br>
-Give user "IIS AppPool\ASP.NET v4.0" full permissions to application directory</br>
-Set Default Document of Application to index.html</br>
-In Fiddler under AutoResponder add new Rule:</br>
-</br>
-regex:.&#42;go&#92;.henkaku&#92;.xyz/x\?(.&#42;)</br>
-http://&lt;ipaddressofhost&gt;/henkaku/api/$1</br>
-</br>
-Replace &lt;ipaddressofhost&gt; with ip address of machine hosting webserver</br>
-Enable options "Enable Rule" and "Unmatched requests passthrough" </br>
-</br>
-Setup your vita to use the proxy created by fiddler (port 8888 by default)</br>
-On the target Vita browse to http://&lt;ipaddressofhost&gt;/henkaku</br>
+## Prereqs
 
-See Usage.odt for detailed instructions
+- Windows
+- IIS + asp.net 4.0
+- Fiddler 4
+
+## Webservice install
+
+1. Add a new IIS Application Alias: **HENkaku**, Application Pool: **ASP.NET v4.0**
+2. Copy contents of `HENkaku-webserver` into Application Physical directory
+3. Give user `IIS AppPool\ASP.NET v4.0` full permissions to application directory
+4. Set Default Document of Application to `index.html`
+5. In Fiddler under `AutoResponder` add new Rule:
+  ```
+  regex:.*go\.henkaku\.xyz/x\?(.*)
+  http://<ipaddressofhost>/henkaku/api/$1
+  ```
+6. Replace `<ipaddressofhost>` with ip address of machine hosting webserver
+7. Enable options **Enable Rule** and **Unmatched requests passthrough**
+8. Setup your vita to use the proxy created by fiddler (port `8888` by default)
+9. On the target Vita browse to `http://<ipaddressofhost>/henkaku`
+
+------------------------------------------------------------------------------------
+
+_See **Usage.odt** for detailed instructions_
