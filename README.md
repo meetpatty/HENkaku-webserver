@@ -12,7 +12,7 @@ Give user "IIS AppPool\ASP.NET v4.0" full permissions to application directory</
 Set Default Document of Application to index.html</br>
 In Fiddler under AutoResponder add new Rule:</br>
 </br>
-regex:.&#42;go\.henkaku\.xyz/x\?(.&#42;)</br>
+regex:.&#42;go&#92;.henkaku&#92;.xyz/x\?(.&#42;)</br>
 http://&lt;ipaddressofhost&gt;/henkaku/api/$1</br>
 </br>
 Replace &lt;ipaddressofhost&gt; with ip address of machine hosting webserver</br>
