@@ -167,7 +167,7 @@ function CreateBasePayload() {
 	});			
 }
 
-app.get('/index.html', function (req, res) {
+app.get('/', function (req, res) {
    fs.readFile("index.html", 'utf8', function (err, data) {
        res.writeHead(200, {'Content-Type': 'text/html'});
        res.end(data);
@@ -185,23 +185,20 @@ app.get('/x?*', function (req, res) {
 	
 	if (base_payload == null) {
 
-		fs.readFileSync("base_payload.bin", function (err, data) {
-			if (err) throw err;
-			base_payload = data;
-		});
+		var data = fs.readFileSync("base_payload.bin", 'binary');  
+		var base_payload = new Buffer(data.length);
+		base_payload.write(data, 'binary');
 		
-		fs.readFileSync("offsets.txt", 'utf8', function (err, data) {
-			if (err) throw err;
-			var parts = data.split("\r\n");
-			for (i = 0; i < parts.length; i++) 
-			{
-				if (parts[i] == '')
-					break;
-				var offsetParts = parts[i].split(":");
-				var offset = parseInt(offsetParts[0],16);
-				offsets[offset] = parseInt(offsetParts[1]);
-			}
-		});
+		var offsetsText = fs.readFileSync("offsets.txt", 'utf8');
+		var parts = offsetsText.split("\r\n");
+		for (i = 0; i < parts.length; i++) 
+		{
+			if (parts[i] == '')
+				break;
+			var offsetParts = parts[i].split(":");
+			var offset = parseInt(offsetParts[0],16);
+			offsets[offset] = parseInt(offsetParts[1]);
+		}
 	}
    
 	var newPayload = new Buffer(base_payload.length);
@@ -229,12 +226,6 @@ app.get('/x?*', function (req, res) {
 	for (i = 0; i < base_payload.length; i += 4)
 	{
 		var data = base_payload.readUInt32LE(i);
-		
-		if (i == 0)
-		{
-		console.log(data);
-		console.log(offsets[i]);
-		}
 
 		if (offsets.hasOwnProperty(i))
 		{
@@ -285,8 +276,3 @@ var server = app.listen(80, function () {
   var port = server.address().port
   console.log("Henkaku local service listening on http://%s:%s", host, port)
 })
-
-
-
-
-
