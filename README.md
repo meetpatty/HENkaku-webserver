@@ -1,12 +1,23 @@
 # HENkaku-webserver
 
-## Prereqs
+##Prereqs for Nodejs webservice
+
+- Nodejs (obviously)
+- Request and Express (install using npm)
+- Proxy or other means to redirect call to go.henkaku.xyz to host machine
+
+##Running Nodejs webservice
+
+1. Run the following command from the command line/terminal `node HENkaku-webservice.js`
+2. On the target Vita browse to `http://<ipaddressofhost>`
+
+## Prereqs for ASP.NET webservice
 
 - Windows
 - IIS + asp.net 4.0
 - Fiddler 4
 
-## Webservice install
+## ASP.NET webservice install
 
 1. Add a new IIS Application Alias: **HENkaku**, Application Pool: **ASP.NET v4.0**
 2. Copy contents of `HENkaku-webserver` into Application Physical directory
