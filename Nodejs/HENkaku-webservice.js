@@ -1,4 +1,3 @@
-// include the http module
 var express = require('express');
 var app = express();
 var request = require("request");
@@ -7,6 +6,43 @@ fs = require('fs');
 
 var offsets = {};
 var base_payload = null;
+var henkakuUrlPayloadString = "1886680168,1731145530,1701326447,1801546606,2037919349,7876474,0,0,";
+var localUrl = ""; //Add local address here, must be 31 or less characters in the form http://<ipaddress>/x eg http://192.168.1.1/x
+var newPayloadUrlStr = "";
+
+//Create replacement url string for payload
+if (localUrl.length > 0 && localUrl.length < 32)
+{
+	var newUrlBytes = new Buffer(32);
+
+	for (i = 0; i < 32; i++)
+	{
+		if (i < localUrl.length)
+		{
+			newUrlBytes[i] = localUrl.charCodeAt(i);
+		}
+		else
+		{
+			newUrlBytes[i] = 0;
+		}
+	}
+
+	for (i = 0; i < 32; i+=4)
+	{
+		newPayloadUrlStr += newUrlBytes.readUInt32LE(i) + ",";
+	}
+}
+
+if (fs.existsSync('base_payload.js') && newPayloadUrlStr.length > 0)
+{
+	var basePayloadText = fs.readFileSync("base_payload.js", 'utf8');
+	
+	fs.writeFile("payload.js", basePayloadText.replace(henkakuUrlPayloadString, newPayloadUrlStr), function(err) {
+		if(err) {
+			return console.log(err);
+		}
+	});	
+}
 
 //Check for existence of index.html
 if (!fs.existsSync('index.html')) {
@@ -40,11 +76,29 @@ if (!fs.existsSync('payload.js')) {
 	};
 
 	request(options, function(error, response, body) {
-		fs.writeFile("payload.js", body, function(err) {
+		fs.writeFile("base_payload.js", body, function(err) {
 			if(err) {
 				return console.log(err);
 			}
 		});
+		
+		if (newPayloadUrlStr.length > 0)
+		{
+			fs.writeFile("payload.js", body.replace(henkakuUrlPayloadString, newPayloadUrlStr), function(err) {
+				if(err) {
+					return console.log(err);
+				}
+			});
+		
+		}
+		else
+		{
+			fs.writeFile("payload.js", body, function(err) {
+				if(err) {
+					return console.log(err);
+				}
+			});
+		}
 	});
 }
 
@@ -53,8 +107,6 @@ if (!fs.existsSync('base_payload.bin') || !fs.existsSync('offsets.txt')) {
 	
 	CreateBasePayload();
 }
-
-var payload1;
 
 function CreateBasePayload() {
 	
