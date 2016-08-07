@@ -2,14 +2,15 @@
 
 ##Prereqs for Nodejs webservice
 
-- Nodejs (obviously)
+- Nodejs (Tested with v4.4.7 LTS)
 - Request and Express (install using npm)
-- Proxy or other means to redirect call to go.henkaku.xyz to host machine
 
 ##Running Nodejs webservice
 
-1. Run the following command from the command line/terminal `node HENkaku-webservice.js`
-2. On the target Vita browse to `http://<ipaddressofhost>`
+1. Edit HENkaku-webservice.js. Change line 10 to `var localUrl = "http://<ipaddressofhost>/x";` replace <ipaddressofhost> with host IP.
+2. If you don't have Molecule installed on your vita, copy the pkg folder from HENkaku server release: https://github.com/henkaku/henkaku/releases to same folder as HENkaku-webservice.js located.
+3. Run the following command from the command line/terminal `node HENkaku-webservice.js`
+4. On the target Vita browse to `http://<ipaddressofhost>`
 
 ## Prereqs for ASP.NET webservice
 
@@ -32,6 +33,10 @@
 7. Enable options **Enable Rule** and **Unmatched requests passthrough**
 8. Setup your vita to use the proxy created by fiddler (port `8888` by default)
 9. On the target Vita browse to `http://<ipaddressofhost>/henkaku`
+
+##Acknowledgements
+
+Team Molecule - For making this possible.
 
 ------------------------------------------------------------------------------------
 

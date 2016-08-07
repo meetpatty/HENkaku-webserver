@@ -7,7 +7,7 @@ fs = require('fs');
 var offsets = {};
 var base_payload = null;
 var henkakuUrlPayloadString = "1886680168,1731145530,1701326447,1801546606,2037919349,7876474,0,0,";
-var localUrl = ""; //Add local address here, must be 31 or less characters in the form http://<ipaddress>/x eg http://192.168.1.1/x
+var localUrl = "http://192.168.1.1/x"; //Add local address here, must be 31 or less characters in the form http://<ipaddress>/x eg http://192.168.1.1/x
 var newPayloadUrlStr = "";
 
 //Create replacement url string for payload
@@ -220,6 +220,7 @@ function CreateBasePayload() {
 }
 
 app.get('/', function (req, res) {
+	console.log("index.html requested");
    fs.readFile("index.html", 'utf8', function (err, data) {
        res.writeHead(200, {'Content-Type': 'text/html'});
        res.end(data);
@@ -227,19 +228,62 @@ app.get('/', function (req, res) {
 })
 
 app.get('/payload.js', function (req, res) {
+	console.log("payload.js requested");
    fs.readFile("payload.js", 'utf8', function (err, data) {
        res.writeHead(200, {'Content-Type': 'text/html'});
        res.end(data);
    });
 })
 
+app.get('/pkg/*', function (req, res) {
+	
+	var requestedResource = req.url;
+	console.log(requestedResource + " requested");
+	var data = fs.readFileSync(requestedResource.substring(1));
+	
+	if (requestedResource.endsWith(".png"))
+	{
+		console.log("png requested");
+		res.writeHead(200, {'Content-Type': 'image/png'});
+	}
+	else if (requestedResource.endsWith(".bin") || requestedResource.endsWith(".sfo"))
+	{
+		res.writeHead(200, {'Content-Type': 'application/octet-stream'});
+	}
+	else if (requestedResource.endsWith(".xml"))
+	{
+		res.writeHead(200, {'Content-Type': 'text/xml'});
+	}
+	
+	res.end(data, 'binary');
+})
+
 app.get('/x?*', function (req, res) {
 	
+	console.log(req.url);
+	
 	if (base_payload == null) {
-
+		
+		console.log("loading base payload");
+		
 		var data = fs.readFileSync("base_payload.bin", 'binary');  
-		var base_payload = new Buffer(data.length);
+		base_payload = new Buffer(data.length);
 		base_payload.write(data, 'binary');
+		
+		if (localUrl.length > 0 && localUrl.length < 32)
+		{
+			console.log("modifying address is payload");
+			
+			var urlOffset = 0x1621C;
+			var targetUrl = localUrl.substring(0, localUrl.length-1) + "pkg";
+			
+			for (i = 0; i < targetUrl.length; i++)
+			{
+				base_payload[urlOffset+i] = targetUrl.charCodeAt(i);
+			}
+			
+			base_payload[urlOffset+targetUrl.length] = 0;
+		}
 		
 		var offsetsText = fs.readFileSync("offsets.txt", 'utf8');
 		var parts = offsetsText.split("\r\n");
@@ -318,8 +362,6 @@ app.get('/x?*', function (req, res) {
 	
 	res.writeHead(200, {'Content-Type': 'application/octet-stream'});
 	res.end(newPayload);
-	
-	
 })
 
 var server = app.listen(80, function () {
