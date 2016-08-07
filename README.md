@@ -7,7 +7,7 @@
 
 ##Running Nodejs webservice
 
-1. Edit HENkaku-webservice.js. Change line 10 to `var localUrl = "http://<ipaddressofhost>/x";` replace <ipaddressofhost> with host IP.
+1. Edit HENkaku-webservice.js. Change line 10 to `var localUrl = "http://<ipaddressofhost>/x";` replace `<ipaddressofhost>` with host IP.
 2. If you don't have Molecule installed on your vita, copy the pkg folder from HENkaku server release: https://github.com/henkaku/henkaku/releases to same folder as HENkaku-webservice.js located.
 3. Run the following command from the command line/terminal `node HENkaku-webservice.js`
 4. On the target Vita browse to `http://<ipaddressofhost>`

@@ -7,7 +7,7 @@ fs = require('fs');
 var offsets = {};
 var base_payload = null;
 var henkakuUrlPayloadString = "1886680168,1731145530,1701326447,1801546606,2037919349,7876474,0,0,";
-var localUrl = "http://192.168.1.1/x"; //Add local address here, must be 31 or less characters in the form http://<ipaddress>/x eg http://192.168.1.1/x
+var localUrl = ""; //Add local address here, must be 31 or less characters in the form http://<ipaddress>/x eg http://192.168.1.1/x
 var newPayloadUrlStr = "";
 
 //Create replacement url string for payload
@@ -238,12 +238,11 @@ app.get('/payload.js', function (req, res) {
 app.get('/pkg/*', function (req, res) {
 	
 	var requestedResource = req.url;
-	console.log(requestedResource + " requested");
+	console.log(requestedResource.substring(1) + " requested");
 	var data = fs.readFileSync(requestedResource.substring(1));
 	
 	if (requestedResource.endsWith(".png"))
 	{
-		console.log("png requested");
 		res.writeHead(200, {'Content-Type': 'image/png'});
 	}
 	else if (requestedResource.endsWith(".bin") || requestedResource.endsWith(".sfo"))
@@ -260,7 +259,7 @@ app.get('/pkg/*', function (req, res) {
 
 app.get('/x?*', function (req, res) {
 	
-	console.log(req.url);
+	console.log("Payload requested with arguments " + req.url.substring(3));
 	
 	if (base_payload == null) {
 		
